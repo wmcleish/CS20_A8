@@ -2,6 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Jade Delight</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -21,10 +22,89 @@ menuItems = new Array(
 	new MenuItem("Fried Rice", 2.85)
 );
 
+/*
+ * Updates the item price when new quantity is entered as well as
+ * the subtotal, tax, and total for the order
+ */
+function updateCost(){
+    var quantity;
+    var subtotal = 0;
+    for (i = 0; i < menuItems.length; i++){
+        quantity = document.getElementsByName("quan" + i)[0].value;
+        if (parseInt(quantity) != 0){
+            itemCost = (parseInt(quantity) * menuItems[i].cost).toFixed(2)
+            document.getElementsByName("cost")[i].value = itemCost;
+            subtotal += parseFloat(itemCost);
+        }
+    }
+    tax = subtotal * 0.0625;
+    total = subtotal + tax;
+    document.getElementById("subtotal").value = subtotal.toFixed(2);
+    document.getElementById("tax").value = tax.toFixed(2);
+    document.getElementById("total").value = total.toFixed(2);
+}
+
+function isDelivery(){
+    return document.getElementsByName("p_or_d")[1].checked;
+}
+
+function validateDelivery(){
+    if (isDelivery()){
+        document.getElementsByClassName("userInfo address")[0].style.display = "block";
+        document.getElementsByClassName("userInfo address")[1].style.display = "block";
+    } else {
+        document.getElementsByClassName("userInfo address")[0].style.display = "none";
+        document.getElementsByClassName("userInfo address")[1].style.display = "none";
+    }
+}
+
+function validateSubmission(){
+    // first name last name have values
+    if (document.getElementsByName("fname")[0].value == "" || document.getElementsByName("lname")[0].value == ""){
+        alert("First and Last name are required");
+        return;
+    }
+    // Phone number 7-10
+    if (document.getElementsByName("phone")[0].value.length != 7 && document.getElementsByName("phone")[0].value.length != 10){
+        alert("Please provide a valid phone number");
+        return;
+    }
+    // pickup time = current + 15, del = 30 (date class)
+    var orderTime;
+    time = new Date();
+    if (isDelivery()){
+        time.setMinutes ( time.getMinutes() + 30 );
+        orderTime = time.getHours() + ":" + (time.getMinutes());
+    } else {
+        time.setMinutes ( time.getMinutes() + 15 );
+        orderTime = time.getHours() + ":" + (time.getMinutes());
+    }
+    // Delivery requires street and city
+    if (isDelivery()){
+        if (document.getElementsByName("street")[0].value == "" || document.getElementsByName("city")[0].value == ""){
+            alert("Address is required for delivery");
+            return;
+        }
+    }
+    // need at least one item
+    var count = 0;
+    for (i = 0; i < menuItems.length; i++){
+        count += document.getElementsByName("quan" + i)[0].value;
+    }
+    if (count == 0){
+        alert("Select at least one item");
+        return;
+    }
+    alert("Thank you for your order!")
+    window.open("summary.html");
+
+}
+
+
 function makeSelect(name, minRange, maxRange)
 {
 	var t= "";
-	t = "<select name='" + name + "' size='1'>";
+	t = "<select name='" + name + "' size='1' onchange='updateCost()'>";
 	for (j=minRange; j<=maxRange; j++)
 	   t += "<option>" + j + "</option>";
 	t+= "</select>"; 
@@ -47,8 +127,8 @@ function td(content, className="")
 <p class="userInfo address"><label>City*</label>: <input type="text" name='city' /></p>
 <p class="userInfo"><label>Phone*</label>: <input type="text"  name='phone' /></p>
 <p> 
-	<input type="radio"  name="p_or_d" value = "pickup" checked="checked"/>Pickup  
-	<input type="radio"  name='p_or_d' value = 'delivery'/>
+	<input type="radio"  name="p_or_d" value = "pickup" checked="checked" onchange = "validateDelivery()"/>Pickup  
+	<input type="radio"  name='p_or_d' value = 'delivery' onchange = "validateDelivery()"/>
 	Delivery
 </p>
 <table border="0" cellpadding="3">
@@ -79,10 +159,10 @@ function td(content, className="")
 <p class="tax totalSection"><label>Mass tax 6.25%:</label>
   $ <input type="text"  name='tax' id="tax" />
 </p>
-<p clas="total totalSection"><label>Total:</label> $ <input type="text"  name='total' id="total" />
+<p class="total totalSection"><label>Total:</label> $ <input type="text"  name='total' id="total" />
 </p>
 
-<input type = "button" value = "Submit Order" />
+<input type = "button" value = "Submit Order" onclick="validateSubmission()"/>
 
 </form>
 </body>
