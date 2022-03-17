@@ -55,8 +55,8 @@ function isDelivery(){
  */
 function validateDelivery(){
     if (isDelivery()){
-        document.getElementsByClassName("userInfo address")[0].style.display = "block";
-        document.getElementsByClassName("userInfo address")[1].style.display = "block";
+        document.getElementsByClassName("userInfo address")[0].style.display = "table-row";
+        document.getElementsByClassName("userInfo address")[1].style.display = "table-row";
     } else {
         document.getElementsByClassName("userInfo address")[0].style.display = "none";
         document.getElementsByClassName("userInfo address")[1].style.display = "none";
@@ -107,27 +107,24 @@ function validateSubmission(){
 
 
     // Create new window!!!
-    var win = window.open("", "Order Summary", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top="+(screen.height-400)+",left="+(screen.width-840));
-    newWindowString = "<h1>Order Summary:</h1>";
+    var win = window.open("", "Order Summary", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=300");
+    newWindowString = "<style>body {background-color: #00A36C;font-family: 'Courier New', Courier, monospace;}</style><h1>Order Summary:</h1>";
     // Item names, quantities and their pricecs
     for (i = 0; i < menuItems.length; i++){
         quantity = (document.getElementsByName("quan" + i)[0].value);
         if (quantity > 0){
             itemCost = (document.getElementsByName("cost")[i].value);
-            newWindowString += ("<strong>" + menuItems[i].name + "</strong> * " + quantity + ": " + itemCost + "<br>");
+            newWindowString += ("<strong>" + menuItems[i].name + "</strong> * " + quantity + ": $" + itemCost + "<br>");
         }
     }
     // Totals, tax, ready time
-    newWindowString += ("<strong>Subtotal:</strong> " + subtotal.value + "<br>");
-    newWindowString += ("<strong>Tax:</strong> " + tax.toFixed(2) + "<br>");
-    newWindowString += ("<strong>Total:</strong> " + total.toFixed(2) + "<br>");
+    newWindowString += ("<br><strong>Subtotal:</strong> $" + subtotal.value + "<br>");
+    newWindowString += ("<strong>Tax:</strong> $" + tax.toFixed(2) + "<br>");
+    newWindowString += ("<strong>Total:</strong> $" + total.toFixed(2) + "<br>");
 
     newWindowString += ("Your order will be ready by: " + orderTime);
 
     win.document.body.innerHTML = newWindowString;
-
-
-
 }
 
 
@@ -152,10 +149,10 @@ function td(content, className="")
 <form>
 
 <p class="userInfo"><label>First Name:</label> <input type="text"  name='fname' /></p>
-<p class="userInfo"><label>Last Name*</label>:  <input type="text"  name='lname' /></p>
-<p class="userInfo address"><label>Street*</label>: <input type="text" name='street' /></p>
-<p class="userInfo address"><label>City*</label>: <input type="text" name='city' /></p>
-<p class="userInfo"><label>Phone*</label>: <input type="text"  name='phone' /></p>
+<p class="userInfo"><label>Last Name*:</label>  <input type="text"  name='lname' /></p>
+<p class="userInfo address"><label>Street*:</label> <input type="text" name='street' /></p>
+<p class="userInfo address"><label>City*:</label> <input type="text" name='city' /></p>
+<p class="userInfo"><label>Phone*:</label> <input type="text"  name='phone' /></p>
 <p> 
 	<input type="radio"  name="p_or_d" value = "pickup" checked="checked" onchange = "validateDelivery()"/>Pickup  
 	<input type="radio"  name='p_or_d' value = 'delivery' onchange = "validateDelivery()"/>
@@ -184,7 +181,7 @@ function td(content, className="")
   document.writeln(s);
 </script>
 </table>
-<p class="subtotal totalSection"><label>Subtotal</label>: 
+<p class="subtotal totalSection"><label>Subtotal:</label> 
    $ <input type="text"  name='subtotal' id="subtotal" />
 </p>
 <p class="tax totalSection"><label>Mass tax 6.25%:</label>

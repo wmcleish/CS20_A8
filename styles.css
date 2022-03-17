@@ -1,3 +1,14 @@
 .userInfo address {
     display: none;
 }
+
+body {
+    background-color: #00A36C;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+form  { display: table;      }
+p     { display: table-row;  }
+label { display: table-cell; }
+input { display: table-cell; }
+
