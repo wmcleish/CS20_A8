@@ -106,7 +106,6 @@ function validateSubmission(){
     alert("Thank you for your order!")
 
 
-    // Create new window!!!
     var win = window.open("", "Order Summary", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=300");
     newWindowString = "<style>body {background-color: #00A36C;font-family: 'Courier New', Courier, monospace;}</style><h1>Order Summary:</h1>";
     // Item names, quantities and their pricecs
@@ -131,7 +130,7 @@ function validateSubmission(){
 function makeSelect(name, minRange, maxRange)
 {
 	var t= "";
-	t = "<select name='" + name + "' size='1' onchange='updateCost()'>";
+	t = "<select name='" + name + "' size='1' >"; 
 	for (j=minRange; j<=maxRange; j++)
 	   t += "<option>" + j + "</option>";
 	t+= "</select>"; 
@@ -154,11 +153,11 @@ function td(content, className="")
 <p class="userInfo address"><label>City*:</label> <input type="text" name='city' /></p>
 <p class="userInfo"><label>Phone*:</label> <input type="text"  name='phone' /></p>
 <p> 
-	<input type="radio"  name="p_or_d" value = "pickup" checked="checked" onchange = "validateDelivery()"/>Pickup  
-	<input type="radio"  name='p_or_d' value = 'delivery' onchange = "validateDelivery()"/>
+	<input type="radio"  name="p_or_d" value = "pickup" checked="checked" />Pickup 
+	<input type="radio"  name='p_or_d' value = 'delivery' /> 
 	Delivery
 </p>
-<script>validateDelivery();</script> <!-- This ensures that street and city are hidden on load -->
+
 <table border="0" cellpadding="3">
   <tr>
     <th>Select Item</th>
@@ -190,7 +189,14 @@ function td(content, className="")
 <p class="total totalSection"><label>Total:</label> $ <input type="text"  name='total' id="total" />
 </p>
 
-<input type = "button" value = "Submit Order" onclick="validateSubmission()"/>
+<input type = "button" value = "Submit Order"/>
+
+<script>
+    document.getElementsByTagName("tbody")[0].addEventListener("change", updateCost);
+    document.getElementsByName("p_or_d")[0].addEventListener("change", validateDelivery);
+    document.getElementsByName("p_or_d")[1].addEventListener("change", validateDelivery);
+    document.querySelector("input[type='button']").addEventListener("click", validateSubmission);
+</script>
 
 </form>
 </body>
